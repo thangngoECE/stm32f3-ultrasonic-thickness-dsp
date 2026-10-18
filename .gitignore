@@ -1,0 +1,17 @@
+Debug/
+.settings/
+*.launch
+
+# Build outputs outside Debug/
+*.elf
+*.o
+*.map
+*.list
+*.su
+
+# Ignore everything in Docs/ except the schematic
+Docs/*
+!Docs/Handle_Ultrasonic.pdf
+
+# Status tracking files
+status.md
