@@ -37,6 +37,23 @@ static const tHal_time_t g_stm32f303rct6_time_impl = {
 };
 #endif
 
+// Pulse (TIM1 CH1 -> PA8 TX gate)
+#include "hal/pulse/tHal_pulse.h"
+
+#ifdef STM32F303RCT6
+#include "hal/platform/stmf303rct6/pulse/ll_pulse.h"
+static const tHal_pulse_t g_stm32f303rct6_pulse_impl = {
+    .init = ll_stm32f303rct6_pulse_init,
+    .set_width_ns = ll_stm32f303rct6_pulse_set_width_ns,
+    .fire = ll_stm32f303rct6_pulse_fire,
+};
+static stm32f303rct6_pulse_hw_context_t g_stm32f303rct6_pulse_tx_context = {
+    .htim = &htim1,
+    .clk_hz = 144000000U,
+    .delay_ticks = 100U,
+};
+#endif
+
 #ifdef __cplusplus
 }
 #endif
