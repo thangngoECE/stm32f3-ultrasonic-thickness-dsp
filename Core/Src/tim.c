@@ -21,6 +21,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
+TIM_HandleTypeDef htim2;
 
 /* USER CODE END 0 */
 
@@ -98,6 +99,14 @@ void MX_TIM1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM1_Init 2 */
+  /* TIM2 TRGO (ITR1) starts TIM1; OPM then emits exactly one pulse per trigger */
+  TIM_SlaveConfigTypeDef sSlaveConfig = {0};
+  sSlaveConfig.SlaveMode = TIM_SLAVEMODE_TRIGGER;
+  sSlaveConfig.InputTrigger = TIM_TS_ITR1;
+  if (HAL_TIM_SlaveConfigSynchro(&htim1, &sSlaveConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
   /* USER CODE END TIM1_Init 2 */
   HAL_TIM_MspPostInit(&htim1);
@@ -343,6 +352,30 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
+/* TIM2: 1 kHz TRGO on update -> TIM1 ITR1, hardware PRF for the TX pulse (no CPU/IRQ jitter) */
+void TIM2_PrfTrigger_Init(void)
+{
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  __HAL_RCC_TIM2_CLK_ENABLE();
+
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 71;   /* 72 MHz -> 1 MHz */
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 999;     /* 1 MHz / 1000 = 1 kHz */
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
 
 /* USER CODE END 1 */
 

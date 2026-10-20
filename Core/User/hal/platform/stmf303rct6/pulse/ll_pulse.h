@@ -15,6 +15,7 @@ extern "C"
 typedef struct
 {
   TIM_HandleTypeDef* htim;
+  TIM_HandleTypeDef* htim_trigger; /* PRF timer whose TRGO starts htim; started by init */
   uint32_t clk_hz;
   uint32_t delay_ticks;
 } stm32f303rct6_pulse_hw_context_t;

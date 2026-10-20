@@ -95,6 +95,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   /* PA9 drives the 1.5K D+ pull-up: high attaches the device to the USB host */
   HAL_GPIO_WritePin(USB_PU_GPIO_Port, USB_PU_Pin, GPIO_PIN_SET);
+  TIM2_PrfTrigger_Init();
   appMain();
   /* USER CODE END 2 */
 

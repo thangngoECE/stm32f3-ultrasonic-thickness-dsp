@@ -49,6 +49,7 @@ static const tHal_pulse_t g_stm32f303rct6_pulse_impl = {
 };
 static stm32f303rct6_pulse_hw_context_t g_stm32f303rct6_pulse_tx_context = {
     .htim = &htim1,
+    .htim_trigger = &htim2, /* TIM2 1 kHz TRGO -> TIM1 ITR1 */
     .clk_hz = 144000000U,
     .delay_ticks = 100U,
 };
